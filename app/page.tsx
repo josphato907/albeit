@@ -5,6 +5,7 @@ import Header from '@/components/header'
 import SearchBar from '@/components/search-bar'
 import EventGrid from '@/components/event-grid'
 import EventModal from '@/components/event-modal'
+import Footer from '@/components/footer'
 
 const mockEvents = [
   {
@@ -112,13 +113,16 @@ export default function Page() {
   }
 
   return (
-    <main className="bg-gray-50 min-h-screen">
-      <Header />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <SearchBar onSearch={handleSearch} />
-        <EventGrid events={filteredEvents} onSelectEvent={setSelectedEvent} />
-      </div>
-      {selectedEvent && <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
-    </main>
+    <>
+      <main className="bg-gray-50 min-h-screen flex flex-col">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 py-8 flex-grow">
+          <SearchBar onSearch={handleSearch} />
+          <EventGrid events={filteredEvents} onSelectEvent={setSelectedEvent} />
+        </div>
+        {selectedEvent && <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
+      </main>
+      <Footer />
+    </>
   )
 }
