@@ -45,10 +45,7 @@ export default function Header() {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#00aeef] to-[#e54bad] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">🎟</span>
-            </div>
-            <span className="text-xl font-bold text-gray-900">AleBilet</span>
+            <img src="/alebilet-logo.png" alt="AleBilet" className="h-10 w-auto" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
