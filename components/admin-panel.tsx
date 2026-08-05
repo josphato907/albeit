@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Plus, Edit2, Trash2, X } from 'lucide-react'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
+import AdminPaymentSettings from '@/components/admin-payment-settings'
 
 interface Event {
   id: number
@@ -151,6 +152,9 @@ export default function AdminPanel() {
               Add New Event
             </button>
           </div>
+
+          {/* Payment Settings */}
+          <AdminPaymentSettings />
 
           {/* Form Modal */}
           {showForm && (

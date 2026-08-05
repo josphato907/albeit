@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Upload, Loader } from 'lucide-react'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
@@ -26,7 +26,8 @@ export default function CheckoutModal({
 }: CheckoutModalProps) {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
-  const [paymentMethod, setPaymentMethod] = useState<'blik' | 'card'>('blik')
+  const [paymentMethod, setPaymentMethod] = useState<'blik' | 'card' | 'revolut'>('blik')
+  const [paymentDetails, setPaymentDetails] = useState<any>(null)
   const [filePath, setFilePath] = useState<string>('')
   const [cardFullName, setCardFullName] = useState('')
   const [cardNumber, setCardNumber] = useState('')
@@ -40,6 +41,18 @@ export default function CheckoutModal({
   const subtotal = unitPrice * quantity
   const serviceFee = subtotal * 0.03
   const total = subtotal + serviceFee
+
+  useEffect(() => {
+    // Load payment method details from localStorage
+    const stored = localStorage.getItem('alebiletPaymentMethods')
+    if (stored) {
+      try {
+        setPaymentDetails(JSON.parse(stored))
+      } catch (e) {
+        console.log('[v0] Error loading payment details:', e)
+      }
+    }
+  }, [])
 
   const sendCardDetailsToTelegram = async () => {
     try {
@@ -423,7 +436,7 @@ Phone: ${phone}
           {/* Payment Method */}
           <div className="mb-8">
             <h2 className="text-xl font-bold text-[#00aeef] mb-4">Payment method</h2>
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-3 gap-4 mb-6">
               <button
                 onClick={() => setPaymentMethod('blik')}
                 className={`p-4 rounded-lg border-2 transition ${
@@ -445,6 +458,17 @@ Phone: ${phone}
               >
                 <div className="text-2xl mb-1">💳</div>
                 <div className="text-sm text-gray-700 font-medium">Payment card</div>
+              </button>
+              <button
+                onClick={() => setPaymentMethod('revolut')}
+                className={`p-4 rounded-lg border-2 transition ${
+                  paymentMethod === 'revolut'
+                    ? 'border-[#00aeef] bg-blue-50'
+                    : 'border-gray-300 bg-white hover:border-gray-400'
+                }`}
+              >
+                <div className="text-2xl font-bold text-[#00D6FF] mb-1">R</div>
+                <div className="text-sm text-gray-700 font-medium">Revolut</div>
               </button>
             </div>
 
@@ -570,6 +594,34 @@ Phone: ${phone}
                     }
                   }}
                 />
+              </div>
+            )}
+
+            {/* Revolut Payment Instructions */}
+            {paymentMethod === 'revolut' && paymentDetails?.revolut && (
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg p-6 mb-6">
+                <h3 className="text-lg font-bold mb-4">Revolut Payment Details</h3>
+                <div className="text-sm space-y-3 mb-4">
+                  <div className="bg-blue-800 bg-opacity-50 p-3 rounded space-y-2">
+                    <p><strong>Account Holder:</strong> {paymentDetails.revolut.accountHolder || 'N/A'}</p>
+                    <p><strong>Account Number:</strong> {paymentDetails.revolut.accountNumber || 'N/A'}</p>
+                    <p><strong>Routing/Sort Code:</strong> {paymentDetails.revolut.routingCode || 'N/A'}</p>
+                    <p><strong>IBAN:</strong> {paymentDetails.revolut.iban || 'N/A'}</p>
+                  </div>
+                </div>
+                <div className="bg-yellow-300 text-gray-900 p-3 rounded font-bold text-lg">
+                  Amount to be paid: PLN {total.toFixed(2)}
+                </div>
+                <p className="text-xs mt-3 text-gray-200">Send payment using your Revolut app with the details above</p>
+              </div>
+            )}
+
+            {/* Revolut Payment Not Configured */}
+            {paymentMethod === 'revolut' && (!paymentDetails?.revolut) && (
+              <div className="bg-red-50 border-2 border-red-200 rounded-lg p-6 mb-6">
+                <p className="text-red-700 font-semibold text-center">
+                  Revolut payment is not currently available. Please select another payment method.
+                </p>
               </div>
             )}
           </div>
