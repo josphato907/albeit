@@ -225,7 +225,7 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
 
               {/* Event Info */}
               <div className="md:col-span-2">
-                <span className="inline-block bg-[#e54bad] text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
+                <span className="inline-block bg-[#00aeef] text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
                   {event.category}
                 </span>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">{event.title}</h1>
@@ -262,55 +262,58 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
                   Ticket offers available
                 </h2>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {ticketOffers.map((offer) => (
-                    <div key={offer.id} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="text-lg font-bold text-gray-900">{offer.name}</h3>
-                          <p className="text-sm text-gray-600">{offer.description}</p>
+                    <div key={offer.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition bg-white">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                        {/* Ticket Info */}
+                        <div className="md:col-span-2">
+                          <h3 className="text-lg font-bold text-[#00aeef] mb-1">{offer.name}</h3>
+                          <p className="text-sm text-gray-600 mb-2">{offer.description}</p>
                           {offer.verified && (
-                            <div className="flex items-center gap-1 mt-2 text-xs text-green-600">
-                              <ShieldCheckIcon size={14} />
-                              <span>Verified ticket (PSP)</span>
+                            <div className="flex items-center gap-1 text-xs text-green-600">
+                              <span className="inline-block w-4 h-4 bg-green-100 rounded-full flex items-center justify-center">
+                                ✓
+                              </span>
+                              <span>Verified e-ticket (PDF)</span>
                             </div>
                           )}
                         </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-[#00aeef]">{offer.price} zł</p>
-                        </div>
-                      </div>
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <label className="text-sm text-gray-600">Quantity:</label>
-                          <div className="flex items-center border border-gray-300 rounded-lg">
-                            <button
-                              onClick={() => handleQuantityChange(offer.id, -1)}
-                              className="px-2 py-1 text-gray-600 hover:bg-gray-100"
-                            >
-                              -
-                            </button>
-                            <span className="px-3 py-1 font-semibold">{quantities[offer.id] || 1}</span>
-                            <button
-                              onClick={() => handleQuantityChange(offer.id, 1)}
-                              className="px-2 py-1 text-gray-600 hover:bg-gray-100"
-                            >
-                              +
-                            </button>
+                        {/* Price */}
+                        <div className="text-center md:text-right">
+                          <p className="text-sm text-gray-600 mb-1">Price</p>
+                          <p className="text-2xl font-bold text-[#00aeef]">{offer.price} PLN</p>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="text-right">
+                            <p className="text-xs text-gray-600">Quantity</p>
+                            <div className="flex items-center border border-gray-300 rounded-lg mt-1">
+                              <button
+                                onClick={() => handleQuantityChange(offer.id, -1)}
+                                className="px-2 py-1 text-gray-600 hover:bg-gray-100 font-semibold"
+                              >
+                                −
+                              </button>
+                              <span className="px-3 py-1 font-semibold">{quantities[offer.id] || 1}</span>
+                              <button
+                                onClick={() => handleQuantityChange(offer.id, 1)}
+                                className="px-2 py-1 text-gray-600 hover:bg-gray-100 font-semibold"
+                              >
+                                +
+                              </button>
+                            </div>
                           </div>
+                          <button
+                            onClick={() => handleBuyNow(offer.id)}
+                            className="px-6 py-2 bg-[#e54bad] text-white font-bold rounded-lg hover:bg-opacity-90 transition whitespace-nowrap"
+                          >
+                            Buy now
+                          </button>
                         </div>
-                        <button
-                          onClick={() => handleBuyNow(offer.id)}
-                          className="px-6 py-2 bg-[#e54bad] text-white font-bold rounded-lg hover:bg-opacity-90 transition"
-                        >
-                          Buy now
-                        </button>
                       </div>
-
-                      <p className="text-xs text-gray-500 mt-2">
-                        Total: {offer.price * (quantities[offer.id] || 1)} zł
-                      </p>
                     </div>
                   ))}
                 </div>
