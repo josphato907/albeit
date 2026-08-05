@@ -95,7 +95,7 @@ export default function EventModal({ event, onClose }: EventModalProps) {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="text-2xl font-bold text-[#00aeef] flex-shrink-0">${event.price.toFixed(2)}</div>
+                  <div className="text-2xl font-bold text-[#00aeef] flex-shrink-0">{event.price} zł</div>
                   <div>
                     <p className="text-sm text-gray-600">Price per ticket</p>
                   </div>
@@ -134,7 +134,7 @@ export default function EventModal({ event, onClose }: EventModalProps) {
                 className="w-full py-4 bg-[#00aeef] text-white font-bold rounded-lg hover:bg-opacity-90 transition flex items-center justify-center gap-2 text-lg"
               >
                 <ShoppingCartIcon size={20} />
-                Continue to Checkout - ${(event.price * quantity).toFixed(2)}
+                Continue to Checkout - {event.price * quantity} zł
               </button>
             </>
           ) : (
@@ -145,14 +145,14 @@ export default function EventModal({ event, onClose }: EventModalProps) {
               <div className="bg-gray-50 p-4 rounded-lg mb-6">
                 <div className="flex justify-between mb-2">
                   <span className="text-gray-600">{event.title}</span>
-                  <span className="font-semibold">${event.price.toFixed(2)}</span>
+                  <span className="font-semibold">{event.price} zł</span>
                 </div>
                 <div className="flex justify-between text-gray-600 text-sm mb-4 pb-4 border-b border-gray-200">
                   <span>Quantity: {quantity}</span>
                 </div>
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total:</span>
-                  <span className="text-[#00aeef]">${(event.price * quantity).toFixed(2)}</span>
+                  <span className="text-[#00aeef]">{event.price * quantity} zł</span>
                 </div>
               </div>
 

@@ -87,7 +87,7 @@ export default function EventGrid({ events, onSelectEvent }: EventGridProps) {
                 {/* Price and CTA */}
                 <div className="flex items-center justify-between">
                   <div className="text-lg font-bold text-[#00aeef]">
-                    ${event.price.toFixed(2)}
+                    {event.price} zł
                   </div>
                   <button className="px-4 py-2 bg-[#00aeef] text-white font-semibold rounded-lg hover:bg-opacity-90 transition text-sm">
                     View Details
