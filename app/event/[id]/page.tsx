@@ -108,6 +108,7 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
   const [user, setUser] = useState<{ name: string; balance: number } | null>(null)
   const [selectedOffer, setSelectedOffer] = useState<string | null>(null)
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
+  const [purchaseSuccess, setPurchaseSuccess] = useState(false)
 
   useEffect(() => {
     // Get user data from localStorage
@@ -174,13 +175,16 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
       return
     }
 
-    alert(`Successfully purchased ${quantities[offerId] || 1} ticket(s) for ${totalPrice} zł!`)
     // Update balance in localStorage
     const newBalance = user.balance - totalPrice
     const updatedUser = { ...user, balance: newBalance }
     localStorage.setItem('alebiletUser', JSON.stringify(updatedUser))
     setUser(updatedUser)
     window.dispatchEvent(new Event('userLoggedIn'))
+    
+    // Show success message
+    setPurchaseSuccess(true)
+    setTimeout(() => setPurchaseSuccess(false), 3000)
   }
 
   if (!event) {
@@ -202,6 +206,14 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
       <Header />
       <main className="bg-gray-50 min-h-screen flex flex-col">
         <div className="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+          {/* Success Notification */}
+          {purchaseSuccess && (
+            <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center gap-2">
+              <span className="text-lg">✓</span>
+              <span className="font-semibold">Purchase successful! Your balance has been updated.</span>
+            </div>
+          )}
+
           {/* Back Button */}
           <Link
             href="/"
