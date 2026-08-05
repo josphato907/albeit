@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Header from '@/components/header'
 import SearchBar from '@/components/search-bar'
 import EventGrid from '@/components/event-grid'
-import EventModal from '@/components/event-modal'
 import Footer from '@/components/footer'
 
 const mockEvents = [
@@ -89,12 +88,9 @@ const mockEvents = [
 ]
 
 export default function Page() {
-  const [selectedEvent, setSelectedEvent] = useState<typeof mockEvents[0] | null>(null)
   const [filteredEvents, setFilteredEvents] = useState(mockEvents)
-  const [searchQuery, setSearchQuery] = useState('')
 
   const handleSearch = (query: string, category: string) => {
-    setSearchQuery(query)
     let results = mockEvents
 
     if (query) {
@@ -118,9 +114,8 @@ export default function Page() {
         <Header />
         <div className="max-w-7xl mx-auto px-4 py-8 flex-grow">
           <SearchBar onSearch={handleSearch} />
-          <EventGrid events={filteredEvents} onSelectEvent={setSelectedEvent} />
+          <EventGrid events={filteredEvents} />
         </div>
-        {selectedEvent && <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
       </main>
       <Footer />
     </>

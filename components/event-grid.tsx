@@ -1,5 +1,6 @@
 import { CalendarIcon, MapPinIcon, UsersIcon } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface Event {
   id: number
@@ -16,7 +17,7 @@ interface Event {
 
 interface EventGridProps {
   events: Event[]
-  onSelectEvent: (event: Event) => void
+  onSelectEvent?: (event: Event) => void
 }
 
 export default function EventGrid({ events, onSelectEvent }: EventGridProps) {
@@ -39,10 +40,10 @@ export default function EventGrid({ events, onSelectEvent }: EventGridProps) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
-            <div
+            <Link
               key={event.id}
-              onClick={() => onSelectEvent(event)}
-              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer group"
+              href={`/event/${event.id}`}
+              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer group block"
             >
               {/* Event Image */}
               <div className="relative h-48 overflow-hidden bg-gray-200">
@@ -94,7 +95,7 @@ export default function EventGrid({ events, onSelectEvent }: EventGridProps) {
                   </button>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
