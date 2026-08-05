@@ -19,7 +19,6 @@ interface TicketOffer {
 
 export default function EventDetailsPage() {
   const params = useParams()
-  const eventId = parseInt(params.id as string, 10)
   const [event, setEvent] = useState<Event | null>(null)
   const [user, setUser] = useState<{ name: string; balance: number } | null>(null)
   const [selectedOffer, setSelectedOffer] = useState<string | null>(null)
@@ -49,6 +48,9 @@ export default function EventDetailsPage() {
   }
 
   useEffect(() => {
+    if (!params.id) return
+    
+    const eventId = parseInt(params.id as string, 10)
     // Find event by ID from shared data
     const foundEvent = getEventById(eventId)
     if (foundEvent) {
@@ -67,7 +69,7 @@ export default function EventDetailsPage() {
       const userData = JSON.parse(storedUser)
       setUser(userData)
     }
-  }, [eventId])
+  }, [params.id])
 
   const handleQuantityChange = (offerId: string, change: number) => {
     setQuantities((prev) => ({
