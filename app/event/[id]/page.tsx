@@ -206,14 +206,6 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
       <Header />
       <main className="bg-gray-50 min-h-screen flex flex-col">
         <div className="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
-          {/* Success Notification */}
-          {purchaseSuccess && (
-            <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center gap-2">
-              <span className="text-lg">✓</span>
-              <span className="font-semibold">Purchase successful! Your balance has been updated.</span>
-            </div>
-          )}
-
           {/* Back Button */}
           <Link
             href="/"
@@ -223,8 +215,24 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
             Back to Events
           </Link>
 
-          {/* Event Header */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          {/* Loading State */}
+          {!event ? (
+            <div className="bg-white rounded-lg shadow-md p-12 text-center">
+              <p className="text-gray-500 text-lg font-semibold">Event not found</p>
+              <p className="text-gray-400 mt-2">The event you are looking for does not exist.</p>
+            </div>
+          ) : (
+            <>
+              {/* Success Notification */}
+              {purchaseSuccess && (
+                <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center gap-2">
+                  <span className="text-lg">✓</span>
+                  <span className="font-semibold">Purchase successful! Your balance has been updated.</span>
+                </div>
+              )}
+
+              {/* Event Header */}
+              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Event Image */}
               <div className="md:col-span-1">
@@ -354,6 +362,8 @@ export default function EventDetailsPage({ params }: { params: { id: string } })
               </div>
             </div>
           </div>
+            </>
+          )}
         </div>
       </main>
       <Footer />
