@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowLeft, ShieldCheckIcon } from 'lucide-react'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
+import CheckoutModal from '@/components/checkout-modal'
 
 interface Event {
   id: number
@@ -38,6 +39,8 @@ export default function EventDetailsClient({ event }: EventDetailsClientProps) {
   const [selectedOffer, setSelectedOffer] = useState<string | null>(null)
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
   const [purchaseSuccess, setPurchaseSuccess] = useState(false)
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+  const [checkoutOffer, setCheckoutOffer] = useState<TicketOffer | null>(null)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('alebiletUser')
@@ -86,18 +89,30 @@ export default function EventDetailsClient({ event }: EventDetailsClientProps) {
     const offer = getTicketOffers(event).find((o) => o.id === offerId)
     if (!offer) return
 
-    const totalPrice = offer.price * (quantities[offerId] || 1)
-    if (user.balance < totalPrice) {
-      alert(`Insufficient balance. You need ${totalPrice} zł but only have ${user.balance} zł`)
+    // Open checkout modal instead of completing purchase immediately
+    setCheckoutOffer(offer)
+    setIsCheckoutOpen(true)
+  }
+
+  const handleConfirmPayment = () => {
+    if (!user || !event || !checkoutOffer) return
+
+    const totalPrice = checkoutOffer.price * (quantities[checkoutOffer.id] || 1)
+    const serviceFee = totalPrice * 0.03
+    const finalTotal = totalPrice + serviceFee
+
+    if (user.balance < finalTotal) {
+      alert(`Insufficient balance. You need ${finalTotal.toFixed(2)} PLN but only have ${user.balance} PLN`)
       return
     }
 
-    const newBalance = user.balance - totalPrice
+    const newBalance = user.balance - finalTotal
     const updatedUser = { ...user, balance: newBalance }
     localStorage.setItem('alebiletUser', JSON.stringify(updatedUser))
     setUser(updatedUser)
     window.dispatchEvent(new Event('userLoggedIn'))
-    
+
+    setIsCheckoutOpen(false)
     setPurchaseSuccess(true)
     setTimeout(() => setPurchaseSuccess(false), 3000)
   }
@@ -124,6 +139,17 @@ export default function EventDetailsClient({ event }: EventDetailsClientProps) {
   return (
     <>
       <Header />
+      {checkoutOffer && (
+        <CheckoutModal
+          isOpen={isCheckoutOpen}
+          onClose={() => setIsCheckoutOpen(false)}
+          eventTitle={event.title}
+          ticketName={checkoutOffer.name}
+          unitPrice={checkoutOffer.price}
+          quantity={quantities[checkoutOffer.id] || 1}
+          onConfirmPayment={handleConfirmPayment}
+        />
+      )}
       <main className="bg-gray-50 min-h-screen flex flex-col">
         <div className="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
           <Link
