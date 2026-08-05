@@ -1,17 +1,42 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from '@/components/header'
 import SearchBar from '@/components/search-bar'
 import EventGrid from '@/components/event-grid'
 import Footer from '@/components/footer'
 import { mockEvents } from '@/lib/events'
 
+interface Event {
+  id: number
+  title: string
+  artist: string
+  date: string
+  time: string
+  location: string
+  category: string
+  price: number
+  image: string
+  description: string
+  available: number
+}
+
 export default function Page() {
-  const [filteredEvents, setFilteredEvents] = useState(mockEvents)
+  const [events, setEvents] = useState<Event[]>(mockEvents)
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>(mockEvents)
+
+  useEffect(() => {
+    // Load events from localStorage
+    const stored = localStorage.getItem('alebiletEvents')
+    if (stored) {
+      const parsedEvents = JSON.parse(stored)
+      setEvents(parsedEvents)
+      setFilteredEvents(parsedEvents)
+    }
+  }, [])
 
   const handleSearch = (query: string, category: string) => {
-    let results = mockEvents
+    let results = events
 
     if (query) {
       results = results.filter(
