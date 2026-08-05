@@ -54,20 +54,27 @@ export default function EventDetailsClient({ event: initialEvent, eventId }: Eve
 
   useEffect(() => {
     // If event wasn't found in mock events, try to find it in localStorage (dynamically added events)
-    if (!event && eventId && eventId > 1000000000) {
+    if (!event && eventId) {
       const storedEvents = localStorage.getItem('alebiletEvents')
       if (storedEvents) {
-        const events = JSON.parse(storedEvents)
-        const foundEvent = events.find((e: Event) => e.id === eventId)
-        if (foundEvent) {
-          setEvent(foundEvent)
+        try {
+          const events = JSON.parse(storedEvents)
+          const foundEvent = events.find((e: Event) => e.id === eventId)
+          if (foundEvent) {
+            console.log('[v0] Found dynamic event:', foundEvent)
+            setEvent(foundEvent)
+          }
+        } catch (error) {
+          console.log('[v0] Error parsing stored events:', error)
         }
       }
     }
   }, [event, eventId])
 
   const getTicketOffers = (evt: Event): TicketOffer[] => {
-    const basePrice = [519, 360, 400, 799, 240, 200][evt.id - 1] || 300
+    // For mock events (ID 1-6), use hardcoded prices. For dynamic events, use the event's price
+    const mockPrices = [519, 360, 400, 799, 240, 200]
+    const basePrice = evt.id >= 1 && evt.id <= 6 ? mockPrices[evt.id - 1] : evt.price || 300
     return [
       {
         id: 'standard',

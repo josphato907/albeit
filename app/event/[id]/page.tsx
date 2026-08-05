@@ -6,31 +6,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params
   const eventId = parseInt(id, 10)
   
-  // First check mock events, then check if it's a timestamp-based ID from dynamic events
-  let event = mockEvents.find((e) => e.id === eventId)
-  
-  // If not found in mock events, it might be a timestamp-based ID from localStorage
-  // We'll pass null and let the client-side component handle finding it
-  if (!event && eventId > 1000000000) {
-    // This is likely a timestamp ID, client will fetch from localStorage
-    event = {
-      id: eventId,
-      title: 'Loading...',
-      artist: '',
-      date: '',
-      time: '',
-      location: '',
-      category: '',
-      price: 0,
-      image: '',
-      description: 'Loading event details...',
-      available: 0,
-    }
-  }
+  // Check mock events - if not found, client will look in localStorage
+  const event = mockEvents.find((e) => e.id === eventId)
   
   return {
-    title: event ? `${event.title} | AleBilet` : 'Event Not Found | AleBilet',
-    description: event ? event.description : 'Event not found',
+    title: event ? `${event.title} | AleBilet` : 'Event Details | AleBilet',
+    description: event ? event.description : 'Event details',
   }
 }
 
@@ -38,13 +19,8 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ i
   const { id } = await params
   const eventId = parseInt(id, 10)
   
-  // First check mock events
-  let event = mockEvents.find((e) => e.id === eventId)
-  
-  // If not found and it looks like a timestamp ID, pass null to let client handle it
-  if (!event && eventId > 1000000000) {
-    event = null
-  }
+  // Check mock events first, then client will look in localStorage for dynamic events
+  const event = mockEvents.find((e) => e.id === eventId)
 
-  return <EventDetailsClient event={event} eventId={eventId} />
+  return <EventDetailsClient event={event || null} eventId={eventId} />
 }
