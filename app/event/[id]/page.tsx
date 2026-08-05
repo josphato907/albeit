@@ -48,11 +48,16 @@ export default function EventDetailsPage() {
   }
 
   useEffect(() => {
-    if (!params.id) return
+    if (!params.id) {
+      console.log("[v0] params.id is missing")
+      return
+    }
     
     const eventId = parseInt(params.id as string, 10)
+    console.log("[v0] Looking for event ID:", eventId, "Type:", typeof eventId)
     // Find event by ID from shared data
     const foundEvent = getEventById(eventId)
+    console.log("[v0] Found event:", foundEvent)
     if (foundEvent) {
       setEvent(foundEvent as any)
       // Initialize quantities
