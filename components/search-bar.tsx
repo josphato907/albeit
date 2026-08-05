@@ -27,8 +27,8 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     <div className="mb-12">
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-[#00aeef] to-[#e54bad] rounded-xl p-8 md:p-12 text-white mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">Find Your Perfect Event</h1>
-        <p className="text-blue-100 mb-6">Discover concerts, theater, sports and more</p>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2">Buy and sell tickets safely</h1>
+        <p className="text-blue-100 mb-6">Ticket authenticity and secure payment guaranteed. Sellers receive payment only after the event.</p>
 
         {/* Search Input */}
         <div className="flex flex-col md:flex-row gap-3 mb-6">
