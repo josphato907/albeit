@@ -3,15 +3,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import SignInModal from './signin-modal'
+import SignUpModal from './signup-modal'
 
 export default function Header() {
   const [isSignInOpen, setIsSignInOpen] = useState(false)
-
-  const handleRegisterClick = () => {
-    setIsSignInOpen(false)
-    // In a real app, you'd navigate to registration or open a register modal
-    console.log('Navigate to registration')
-  }
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false)
 
   return (
     <>
@@ -43,7 +39,10 @@ export default function Header() {
             >
               Sign In
             </button>
-            <button className="px-4 py-2 bg-[#00aeef] text-white font-semibold rounded-lg hover:bg-opacity-90 transition">
+            <button
+              onClick={() => setIsSignUpOpen(true)}
+              className="px-4 py-2 bg-[#00aeef] text-white font-semibold rounded-lg hover:bg-opacity-90 transition"
+            >
               Sign Up
             </button>
           </div>
@@ -52,7 +51,18 @@ export default function Header() {
       <SignInModal
         isOpen={isSignInOpen}
         onClose={() => setIsSignInOpen(false)}
-        onRegisterClick={handleRegisterClick}
+        onRegisterClick={() => {
+          setIsSignInOpen(false)
+          setIsSignUpOpen(true)
+        }}
+      />
+      <SignUpModal
+        isOpen={isSignUpOpen}
+        onClose={() => setIsSignUpOpen(false)}
+        onSignInClick={() => {
+          setIsSignUpOpen(false)
+          setIsSignInOpen(true)
+        }}
       />
     </>
   )
