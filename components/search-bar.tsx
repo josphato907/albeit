@@ -26,38 +26,42 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   return (
     <div className="mb-12">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-[#00aeef] to-[#e54bad] rounded-xl p-8 md:p-12 text-white mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">Kupuj i sprzedawaj bilety bezpiecznie</h1>
-        <p className="text-blue-100 mb-6">Autentyczność biletów i bezpieczne płatności gwarantowane. Sprzedawcy otrzymują płatność dopiero po imprezie.</p>
+      <div className="bg-[#0099CC] p-8 md:p-12 text-white mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 text-white">Kupuj i sprzedawaj bilety bezpiecznie</h1>
+        <p className="text-white opacity-95 mb-6">Autentyczność biletów i bezpiecznej płatności gwarantowane. Sprzedawca otrzymuje zapłatę dopiero po imprezie.</p>
 
         {/* Search Input */}
-        <div className="flex flex-col md:flex-row gap-3 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="flex-1 relative">
-            <SearchIcon className="absolute left-3 top-3 text-white opacity-70" size={20} />
+            <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
-              placeholder="Szukaj eventów, artystów, sal..."
+              placeholder="Szukaj artysty, wydarzenia lub miasta..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="w-full pl-10 pr-4 py-3 rounded-lg bg-white bg-opacity-90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
+              className="w-full pl-12 pr-4 py-3 rounded-full bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
             />
           </div>
           <button
             onClick={handleSearch}
-            className="px-6 py-3 bg-white text-[#00aeef] font-semibold rounded-lg hover:bg-opacity-90 transition"
+            className="px-8 py-3 bg-[#E54BAD] text-white font-semibold rounded-full hover:bg-opacity-90 transition whitespace-nowrap"
           >
             Szukaj
           </button>
         </div>
 
         {/* Quick Links */}
-        <div className="flex flex-wrap gap-2">
-          <MapPinIcon className="text-white opacity-70" size={18} />
-          <span className="text-sm opacity-90">Wszystkie miasta</span>
-          <span className="opacity-50">•</span>
-          <CalendarIcon className="text-white opacity-70" size={18} />
-          <span className="text-sm opacity-90">Wszystkie daty</span>
+        <div className="flex flex-wrap gap-4 text-sm text-white opacity-90">
+          <div className="flex items-center gap-2">
+            <MapPinIcon size={16} />
+            <span>Wszystkie miasta</span>
+          </div>
+          <span>•</span>
+          <div className="flex items-center gap-2">
+            <CalendarIcon size={16} />
+            <span>Wszystkie daty</span>
+          </div>
         </div>
       </div>
 
