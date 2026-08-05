@@ -31,11 +31,13 @@ interface TicketOffer {
 }
 
 interface EventDetailsClientProps {
-  event: Event | undefined
+  event: Event | undefined | null
+  eventId?: number
 }
 
-export default function EventDetailsClient({ event }: EventDetailsClientProps) {
+export default function EventDetailsClient({ event: initialEvent, eventId }: EventDetailsClientProps) {
   const [user, setUser] = useState<{ name: string; balance: number } | null>(null)
+  const [event, setEvent] = useState<Event | null>(initialEvent || null)
   const [selectedOffer, setSelectedOffer] = useState<string | null>(null)
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
   const [purchaseSuccess, setPurchaseSuccess] = useState(false)
@@ -49,6 +51,20 @@ export default function EventDetailsClient({ event }: EventDetailsClientProps) {
       setUser(userData)
     }
   }, [])
+
+  useEffect(() => {
+    // If event wasn't found in mock events, try to find it in localStorage (dynamically added events)
+    if (!event && eventId && eventId > 1000000000) {
+      const storedEvents = localStorage.getItem('alebiletEvents')
+      if (storedEvents) {
+        const events = JSON.parse(storedEvents)
+        const foundEvent = events.find((e: Event) => e.id === eventId)
+        if (foundEvent) {
+          setEvent(foundEvent)
+        }
+      }
+    }
+  }, [event, eventId])
 
   const getTicketOffers = (evt: Event): TicketOffer[] => {
     const basePrice = [519, 360, 400, 799, 240, 200][evt.id - 1] || 300
