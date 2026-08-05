@@ -69,7 +69,7 @@ export default function Header() {
                 <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
                   <div>
                     <p className="text-sm font-medium text-gray-700">{user.name}</p>
-                    <p className="text-xs text-[#00aeef] font-semibold">{user.balance} zł</p>
+                    <p className="text-xs text-[#00aeef] font-semibold">{user.balance.toFixed(2)} zł</p>
                   </div>
                 </div>
                 <button
