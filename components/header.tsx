@@ -1,13 +1,44 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import SignInModal from './signin-modal'
 import SignUpModal from './signup-modal'
 
+interface UserData {
+  name: string
+  email: string
+  balance: number
+}
+
 export default function Header() {
   const [isSignInOpen, setIsSignInOpen] = useState(false)
   const [isSignUpOpen, setIsSignUpOpen] = useState(false)
+  const [user, setUser] = useState<UserData | null>(null)
+
+  useEffect(() => {
+    // Check if user is logged in on component mount
+    const storedUser = localStorage.getItem('alebiletUser')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    }
+
+    // Listen for login events
+    const handleUserLoggedIn = () => {
+      const storedUser = localStorage.getItem('alebiletUser')
+      if (storedUser) {
+        setUser(JSON.parse(storedUser))
+      }
+    }
+
+    window.addEventListener('userLoggedIn', handleUserLoggedIn)
+    return () => window.removeEventListener('userLoggedIn', handleUserLoggedIn)
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem('alebiletUser')
+    setUser(null)
+  }
 
   return (
     <>
@@ -33,18 +64,37 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsSignInOpen(true)}
-              className="px-4 py-2 text-[#00aeef] font-semibold hover:bg-blue-50 rounded-lg transition"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => setIsSignUpOpen(true)}
-              className="px-4 py-2 bg-[#00aeef] text-white font-semibold rounded-lg hover:bg-opacity-90 transition"
-            >
-              Sign Up
-            </button>
+            {user ? (
+              <>
+                <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">{user.name}</p>
+                    <p className="text-xs text-[#00aeef] font-semibold">{user.balance} zł</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 text-gray-700 font-semibold hover:bg-gray-100 rounded-lg transition border border-gray-300"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => setIsSignInOpen(true)}
+                  className="px-4 py-2 text-[#00aeef] font-semibold hover:bg-blue-50 rounded-lg transition"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => setIsSignUpOpen(true)}
+                  className="px-4 py-2 bg-[#00aeef] text-white font-semibold rounded-lg hover:bg-opacity-90 transition"
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
           </div>
         </div>
       </header>

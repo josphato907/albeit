@@ -57,8 +57,16 @@ export default function SignUpModal({ isOpen, onClose, onSignInClick }: SignUpMo
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (validateForm()) {
-      console.log('Form submitted:', formData)
-      // Here you would typically send the data to your backend
+      const userData = {
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        balance: 500, // New users get initial balance
+        createdAt: new Date().toISOString(),
+      }
+      localStorage.setItem('alebiletUser', JSON.stringify(userData))
+      // Trigger a storage event to notify other components
+      window.dispatchEvent(new Event('userLoggedIn'))
       setFormData({ fullName: '', email: '', password: '', phone: '' })
       onClose()
     }

@@ -21,8 +21,17 @@ export default function SignInModal({ isOpen, onClose, onRegisterClick }: SignIn
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false)
-      // In a real app, you'd handle authentication here
-      console.log('Sign in attempted with:', { email, password })
+      // Extract name from email (first part before @)
+      const name = email.split('@')[0]
+      const userData = {
+        name,
+        email,
+        balance: 500, // Default balance for new users
+        lastLogin: new Date().toISOString(),
+      }
+      localStorage.setItem('alebiletUser', JSON.stringify(userData))
+      // Trigger a storage event to notify other components
+      window.dispatchEvent(new Event('userLoggedIn'))
       onClose()
     }, 1000)
   }
