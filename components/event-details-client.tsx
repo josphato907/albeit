@@ -198,7 +198,7 @@ export default function EventDetailsClient({ event }: EventDetailsClientProps) {
 
                       <div className="text-center md:text-right">
                         <p className="text-sm text-gray-600 mb-1">Price</p>
-                        <p className="text-2xl font-bold text-[#00aeef]">{offer.price} PLN</p>
+                        <p className="text-2xl font-bold text-[#00aeef]">{offer.price * (quantities[offer.id] || 1)} PLN</p>
                       </div>
 
                       <div className="flex items-center justify-between gap-3">
