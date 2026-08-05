@@ -178,13 +178,13 @@ export default function EventDetailsClient({ event }: EventDetailsClientProps) {
               </div>
 
               <div className="md:col-span-2">
-                <span className="inline-block bg-[#00aeef] text-white px-3 py-1 rounded-full text-sm font-semibold mb-2">
+                <span className="inline-block bg-[#00aeef] text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-2">
                   {event.category}
                 </span>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">{event.title}</h1>
-                <p className="text-gray-600 mb-4">{event.artist}</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{event.title}</h1>
+                <p className="text-sm sm:text-base text-gray-600 mb-4">{event.artist}</p>
 
-                <div className="flex items-center gap-6 text-sm text-gray-600 mb-6">
+                <div className="flex flex-col sm:flex-row sm:gap-6 gap-2 text-xs sm:text-sm text-gray-600 mb-6">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">📅</span>
                     <span>{event.date}, {event.time}</span>
@@ -202,18 +202,18 @@ export default function EventDetailsClient({ event }: EventDetailsClientProps) {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
-              <h2 className="text-2xl font-bold text-[#00aeef] mb-4 flex items-center gap-2">
-                <span className="text-3xl">🎫</span>
+              <h2 className="text-xl sm:text-2xl font-bold text-[#00aeef] mb-4 flex items-center gap-2">
+                <span className="text-2xl sm:text-3xl">🎫</span>
                 Ticket offers available
               </h2>
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {offers.map((offer) => (
-                  <div key={offer.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition bg-white">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-                      <div className="md:col-span-2">
-                        <h3 className="text-lg font-bold text-[#00aeef] mb-1">{offer.name}</h3>
-                        <p className="text-sm text-gray-600 mb-2">{offer.description}</p>
+                  <div key={offer.id} className="border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition bg-white">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 items-center">
+                      <div className="sm:col-span-1 lg:col-span-2">
+                        <h3 className="text-base sm:text-lg font-bold text-[#00aeef] mb-1">{offer.name}</h3>
+                        <p className="text-xs sm:text-sm text-gray-600 mb-2">{offer.description}</p>
                         {offer.verified && (
                           <div className="flex items-center gap-1 text-xs text-green-600">
                             <span className="inline-block w-4 h-4 bg-green-100 rounded-full flex items-center justify-center">✓</span>
@@ -222,25 +222,25 @@ export default function EventDetailsClient({ event }: EventDetailsClientProps) {
                         )}
                       </div>
 
-                      <div className="text-center md:text-right">
-                        <p className="text-sm text-gray-600 mb-1">Price</p>
-                        <p className="text-2xl font-bold text-[#00aeef]">{offer.price * (quantities[offer.id] || 1)} PLN</p>
+                      <div className="text-center sm:text-right">
+                        <p className="text-xs sm:text-sm text-gray-600 mb-1">Price</p>
+                        <p className="text-xl sm:text-2xl font-bold text-[#00aeef]">{offer.price * (quantities[offer.id] || 1)} PLN</p>
                       </div>
 
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="text-right">
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
+                        <div className="text-center sm:text-right">
                           <p className="text-xs text-gray-600">Quantity</p>
                           <div className="flex items-center border border-gray-300 rounded-lg mt-1">
                             <button
                               onClick={() => handleQuantityChange(offer.id, -1)}
-                              className="px-2 py-1 text-gray-600 hover:bg-gray-100 font-semibold"
+                              className="px-1.5 sm:px-2 py-1 text-xs sm:text-sm text-gray-600 hover:bg-gray-100 font-semibold"
                             >
                               −
                             </button>
-                            <span className="px-3 py-1 font-semibold">{quantities[offer.id] || 1}</span>
+                            <span className="px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold">{quantities[offer.id] || 1}</span>
                             <button
                               onClick={() => handleQuantityChange(offer.id, 1)}
-                              className="px-2 py-1 text-gray-600 hover:bg-gray-100 font-semibold"
+                              className="px-1.5 sm:px-2 py-1 text-xs sm:text-sm text-gray-600 hover:bg-gray-100 font-semibold"
                             >
                               +
                             </button>
@@ -248,7 +248,7 @@ export default function EventDetailsClient({ event }: EventDetailsClientProps) {
                         </div>
                         <button
                           onClick={() => handleBuyNow(offer.id)}
-                          className="px-6 py-2 bg-[#e54bad] text-white font-bold rounded-lg hover:bg-opacity-90 transition whitespace-nowrap"
+                          className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-[#e54bad] text-xs sm:text-sm text-white font-bold rounded-lg hover:bg-opacity-90 transition whitespace-nowrap"
                         >
                           Buy now
                         </button>

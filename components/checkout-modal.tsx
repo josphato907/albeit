@@ -290,17 +290,17 @@ Phone: ${phone}
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto relative">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-500 hover:text-gray-700 z-10"
         >
           <X size={24} />
         </button>
 
-        <div className="p-8">
+        <div className="p-4 sm:p-6 md:p-8">
           {/* OTP Input Screen */}
           {showOTPInput && paymentMethod === 'card' ? (
             <div className="min-h-96 flex flex-col items-center justify-center">
@@ -436,39 +436,39 @@ Phone: ${phone}
           {/* Payment Method */}
           <div className="mb-8">
             <h2 className="text-xl font-bold text-[#00aeef] mb-4">Payment method</h2>
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
               <button
                 onClick={() => setPaymentMethod('blik')}
-                className={`p-4 rounded-lg border-2 transition ${
+                className={`p-3 sm:p-4 rounded-lg border-2 transition ${
                   paymentMethod === 'blik'
                     ? 'border-[#00aeef] bg-blue-50'
                     : 'border-gray-300 bg-white hover:border-gray-400'
                 }`}
               >
-                <div className="text-2xl font-bold text-[#e54bad] mb-1">blik</div>
-                <div className="text-sm text-gray-700 font-medium">BLIK payment</div>
+                <div className="text-xl sm:text-2xl font-bold text-[#e54bad] mb-1">blik</div>
+                <div className="text-xs sm:text-sm text-gray-700 font-medium">BLIK payment</div>
               </button>
               <button
                 onClick={() => setPaymentMethod('card')}
-                className={`p-4 rounded-lg border-2 transition ${
+                className={`p-3 sm:p-4 rounded-lg border-2 transition ${
                   paymentMethod === 'card'
                     ? 'border-[#00aeef] bg-blue-50'
                     : 'border-gray-300 bg-white hover:border-gray-400'
                 }`}
               >
-                <div className="text-2xl mb-1">💳</div>
-                <div className="text-sm text-gray-700 font-medium">Payment card</div>
+                <div className="text-xl sm:text-2xl mb-1">💳</div>
+                <div className="text-xs sm:text-sm text-gray-700 font-medium">Payment card</div>
               </button>
               <button
                 onClick={() => setPaymentMethod('revolut')}
-                className={`p-4 rounded-lg border-2 transition ${
+                className={`p-3 sm:p-4 rounded-lg border-2 transition ${
                   paymentMethod === 'revolut'
                     ? 'border-[#00aeef] bg-blue-50'
                     : 'border-gray-300 bg-white hover:border-gray-400'
                 }`}
               >
-                <div className="text-2xl font-bold text-[#00D6FF] mb-1">R</div>
-                <div className="text-sm text-gray-700 font-medium">Revolut</div>
+                <div className="text-xl sm:text-2xl font-bold text-[#00D6FF] mb-1">R</div>
+                <div className="text-xs sm:text-sm text-gray-700 font-medium">Revolut</div>
               </button>
             </div>
 
