@@ -26,34 +26,6 @@ export default function EventDetailsPage() {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
   const [purchaseSuccess, setPurchaseSuccess] = useState(false)
 
-  useEffect(() => {
-    // Find event by ID from shared data
-    const foundEvent = getEventById(eventId)
-    if (foundEvent) {
-      setEvent(foundEvent as any)
-    }
-
-    // Get user data from localStorage
-    const storedUser = localStorage.getItem('alebiletUser')
-    if (storedUser) {
-      const userData = JSON.parse(storedUser)
-      setUser(userData)
-    }
-
-    // Get event data
-    const eventId = parseInt(params.id)
-    const foundEvent = mockEvents.find((e) => e.id === eventId)
-    if (foundEvent) {
-      setEvent(foundEvent)
-      // Initialize quantities
-      const initialQuantities: { [key: string]: number } = {}
-      getTicketOffers(foundEvent).forEach((offer) => {
-        initialQuantities[offer.id] = 1
-      })
-      setQuantities(initialQuantities)
-    }
-  }, [params.id])
-
   const getTicketOffers = (event: Event): TicketOffer[] => {
     const basePrice = [519, 360, 400, 799, 240, 200][event.id - 1] || 300
     return [
@@ -75,6 +47,27 @@ export default function EventDetailsPage() {
       },
     ]
   }
+
+  useEffect(() => {
+    // Find event by ID from shared data
+    const foundEvent = getEventById(eventId)
+    if (foundEvent) {
+      setEvent(foundEvent as any)
+      // Initialize quantities
+      const initialQuantities: { [key: string]: number } = {}
+      getTicketOffers(foundEvent).forEach((offer) => {
+        initialQuantities[offer.id] = 1
+      })
+      setQuantities(initialQuantities)
+    }
+
+    // Get user data from localStorage
+    const storedUser = localStorage.getItem('alebiletUser')
+    if (storedUser) {
+      const userData = JSON.parse(storedUser)
+      setUser(userData)
+    }
+  }, [eventId])
 
   const handleQuantityChange = (offerId: string, change: number) => {
     setQuantities((prev) => ({
