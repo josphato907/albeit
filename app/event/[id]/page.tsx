@@ -145,16 +145,13 @@ export default function EventDetailsPage() {
 
   useEffect(() => {
     if (!params?.id) {
-      console.log("[v0] params.id is missing")
       setIsLoading(false)
       return
     }
     
     const eventId = parseInt(params.id as string, 10)
-    console.log("[v0] Looking for event ID:", eventId, "Type:", typeof eventId)
     // Find event by ID from local mock data
     const foundEvent = mockEvents.find((e) => e.id === eventId)
-    console.log("[v0] Found event:", foundEvent)
     if (foundEvent) {
       setEvent(foundEvent)
       // Initialize quantities
