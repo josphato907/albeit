@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { ArrowLeft, ShieldCheckIcon, TicketIcon } from 'lucide-react'
@@ -18,7 +18,7 @@ interface TicketOffer {
 }
 
 export default function EventDetailsPage() {
-  const params = useParams()
+  const params = use(useParams())
   const [event, setEvent] = useState<Event | null>(null)
   const [user, setUser] = useState<{ name: string; balance: number } | null>(null)
   const [selectedOffer, setSelectedOffer] = useState<string | null>(null)
