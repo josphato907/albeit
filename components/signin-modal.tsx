@@ -26,7 +26,7 @@ export default function SignInModal({ isOpen, onClose, onRegisterClick }: SignIn
       const userData = {
         name,
         email,
-        balance: 500, // Default balance for new users
+        balance: 0, // Default balance for new users
         lastLogin: new Date().toISOString(),
       }
       localStorage.setItem('alebiletUser', JSON.stringify(userData))

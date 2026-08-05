@@ -61,7 +61,7 @@ export default function SignUpModal({ isOpen, onClose, onSignInClick }: SignUpMo
         name: formData.fullName,
         email: formData.email,
         phone: formData.phone,
-        balance: 500, // New users get initial balance
+        balance: 0, // New users get initial balance
         createdAt: new Date().toISOString(),
       }
       localStorage.setItem('alebiletUser', JSON.stringify(userData))
