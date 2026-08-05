@@ -33,20 +33,20 @@ export default function Footer() {
       {/* How it works section */}
       <div className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-[#00aeef] mb-2">How does it work?</h2>
+          <h2 className="text-3xl font-bold text-[#00aeef] mb-2">Jak to działa?</h2>
           <div className="w-12 h-1 bg-[#e54bad] mb-8"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-bold text-[#00aeef] mb-3">For Buyers</h3>
+              <h3 className="text-lg font-bold text-[#00aeef] mb-3">Dla kupujących</h3>
               <p className="text-gray-600 text-sm">
-                You'll receive valid tickets on time or your money back. Payment is only released to the seller after the event.
+                Otrzymasz ważne bilety na czas lub zwrot pieniędzy. Płatność jest zwalniana sprzedawcy dopiero po imprezie.
               </p>
             </div>
             <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-bold text-[#e54bad] mb-3">For Sellers</h3>
+              <h3 className="text-lg font-bold text-[#e54bad] mb-3">Dla sprzedawców</h3>
               <p className="text-gray-600 text-sm">
-                List tickets for free. Upload a PDF file and receive payment automatically in your bank account.
+                Wystawiaj bilety bezpłatnie. Przesyłaj pliki PDF i otrzymuj płatności automatycznie na swoje konto bankowe.
               </p>
             </div>
           </div>
@@ -83,19 +83,19 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
             {/* About Section */}
             <div>
-              <h3 className="font-bold text-lg mb-4">About us</h3>
+              <h3 className="font-bold text-lg mb-4">O nas</h3>
               <p className="text-gray-400 text-sm">
-                AleBilet is the leading secondary ticket marketplace platform in Poland. We guarantee secure purchases and easy resale of unused tickets.
+                AleBilet to wiodąca platforma wtórnego rynku biletów w Polsce. Gwarantujemy bezpieczne zakupy i łatwy odsprzedaż niewykorzystanych biletów.
               </p>
             </div>
 
             {/* Categories Section */}
             <div>
-              <h3 className="font-bold text-lg mb-4">Categories</h3>
+              <h3 className="font-bold text-lg mb-4">Kategorie</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <Link href="#" className="hover:text-[#00aeef] transition">
-                    Concerts
+                    Koncerty
                   </Link>
                 </li>
                 <li>
@@ -105,12 +105,12 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link href="#" className="hover:text-[#00aeef] transition">
-                    Festivals
+                    Festiwale
                   </Link>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-[#00aeef] transition">
-                    Theater
+                    Teatr
                   </Link>
                 </li>
               </ul>
@@ -118,19 +118,19 @@ export default function Footer() {
 
             {/* Help and Contact Section */}
             <div>
-              <h3 className="font-bold text-lg mb-4">Help and Contact</h3>
+              <h3 className="font-bold text-lg mb-4">Pomoc i kontakt</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>
                   <a href="mailto:pomoc@alebilet.pl" className="hover:text-[#00aeef] transition">
-                    E-mail: pomoc@alebilet.pl
+                    Email: pomoc@alebilet.pl
                   </a>
                 </li>
                 <li>
                   <a href="tel:+48123456789" className="hover:text-[#00aeef] transition">
-                    Infoline: +48 22 123 45 67
+                    Infolinia: +48 22 123 45 67
                   </a>
                 </li>
-                <li className="text-gray-500">Mon - Fri: 9:00 - 17:00</li>
+                <li className="text-gray-500">Pon - Pt: 9:00 - 17:00</li>
               </ul>
             </div>
           </div>

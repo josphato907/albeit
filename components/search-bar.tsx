@@ -11,7 +11,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('')
 
-  const categories = ['All', 'Music', 'Theatre', 'Sports', 'Entertainment']
+  const categories = ['Wszystko', 'Muzyka', 'Teatr', 'Sport', 'Rozrywka']
 
   const handleSearch = () => {
     onSearch(query, category === 'All' ? '' : category)
@@ -27,8 +27,8 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     <div className="mb-12">
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-[#00aeef] to-[#e54bad] rounded-xl p-8 md:p-12 text-white mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">Buy and sell tickets safely</h1>
-        <p className="text-blue-100 mb-6">Ticket authenticity and secure payment guaranteed. Sellers receive payment only after the event.</p>
+        <h1 className="text-3xl md:text-4xl font-bold mb-2">Kupuj i sprzedawaj bilety bezpiecznie</h1>
+        <p className="text-blue-100 mb-6">Autentyczność biletów i bezpieczne płatności gwarantowane. Sprzedawcy otrzymują płatność dopiero po imprezie.</p>
 
         {/* Search Input */}
         <div className="flex flex-col md:flex-row gap-3 mb-6">
@@ -36,7 +36,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             <SearchIcon className="absolute left-3 top-3 text-white opacity-70" size={20} />
             <input
               type="text"
-              placeholder="Search events, artists, venues..."
+              placeholder="Szukaj eventów, artystów, sal..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -47,17 +47,17 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             onClick={handleSearch}
             className="px-6 py-3 bg-white text-[#00aeef] font-semibold rounded-lg hover:bg-opacity-90 transition"
           >
-            Search
+            Szukaj
           </button>
         </div>
 
         {/* Quick Links */}
         <div className="flex flex-wrap gap-2">
           <MapPinIcon className="text-white opacity-70" size={18} />
-          <span className="text-sm opacity-90">All cities</span>
+          <span className="text-sm opacity-90">Wszystkie miasta</span>
           <span className="opacity-50">•</span>
           <CalendarIcon className="text-white opacity-70" size={18} />
-          <span className="text-sm opacity-90">All dates</span>
+          <span className="text-sm opacity-90">Wszystkie daty</span>
         </div>
       </div>
 

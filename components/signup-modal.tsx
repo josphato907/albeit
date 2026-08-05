@@ -23,23 +23,23 @@ export default function SignUpModal({ isOpen, onClose, onSignInClick }: SignUpMo
     const newErrors: Record<string, string> = {}
 
     if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required'
+      newErrors.fullName = 'Imię i nazwisko jest wymagane'
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required'
+      newErrors.email = 'Email jest wymagany'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email'
+      newErrors.email = 'Proszę wprowadzić prawidłowy email'
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required'
+      newErrors.password = 'Hasło jest wymagane'
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
+      newErrors.password = 'Hasło musi mieć co najmniej 6 znaków'
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required'
+      newErrors.phone = 'Numer telefonu jest wymagany'
     }
 
     setErrors(newErrors)

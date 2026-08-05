@@ -58,14 +58,14 @@ export default function SignInModal({ isOpen, onClose, onRegisterClick }: SignIn
         <div className="p-8">
           {/* Title */}
           <h1 className="text-2xl font-bold text-center text-[#00aeef] mb-8">
-            Welcome to AleBilet
+            Witaj w AleBilet
           </h1>
 
           {/* Form */}
           <form onSubmit={handleSignIn} className="space-y-5">
             {/* Email field */}
             <div>
-              <label className="block text-sm text-gray-700 mb-2">Email address</label>
+              <label className="block text-sm text-gray-700 mb-2">Adres email</label>
               <input
                 type="email"
                 value={email}
@@ -78,7 +78,7 @@ export default function SignInModal({ isOpen, onClose, onRegisterClick }: SignIn
 
             {/* Password field */}
             <div>
-              <label className="block text-sm text-gray-700 mb-2">Password</label>
+              <label className="block text-sm text-gray-700 mb-2">Hasło</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -104,7 +104,7 @@ export default function SignInModal({ isOpen, onClose, onRegisterClick }: SignIn
               disabled={isLoading}
               className="w-full py-3 bg-[#e54bad] text-white font-bold rounded-lg hover:bg-opacity-90 transition disabled:opacity-70 mt-6"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Logowanie...' : 'Zaloguj się'}
             </button>
           </form>
 
@@ -128,17 +128,17 @@ export default function SignInModal({ isOpen, onClose, onRegisterClick }: SignIn
                 G
               </text>
             </svg>
-            Continue with Google
+            Zaloguj się przez Google
           </button>
 
           {/* Register link */}
           <p className="text-center text-gray-600 text-sm mt-6">
-            Don&apos;t have an account?{' '}
+            Nie masz konta?{' '}
             <button
               onClick={onRegisterClick}
               className="text-[#00aeef] font-semibold hover:underline transition"
             >
-              Register
+              Zarejestruj się
             </button>
           </p>
         </div>

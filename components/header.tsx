@@ -53,13 +53,13 @@ export default function Header() {
 
           <nav className="hidden md:flex items-center gap-6">
             <Link href="#" className="text-gray-600 hover:text-gray-900 font-medium transition">
-              Events
+              Eventy
             </Link>
             <Link href="#" className="text-gray-600 hover:text-gray-900 font-medium transition">
-              My Tickets
+              Moje Bilety
             </Link>
             <Link href="#" className="text-gray-600 hover:text-gray-900 font-medium transition">
-              About
+              O Nas
             </Link>
           </nav>
 
@@ -76,7 +76,7 @@ export default function Header() {
                   onClick={handleLogout}
                   className="px-4 py-2 text-gray-700 font-semibold hover:bg-gray-100 rounded-lg transition border border-gray-300"
                 >
-                  Logout
+                  Wyloguj się
                 </button>
               </>
             ) : (
@@ -85,13 +85,13 @@ export default function Header() {
                   onClick={() => setIsSignInOpen(true)}
                   className="px-4 py-2 text-[#00aeef] font-semibold hover:bg-blue-50 rounded-lg transition"
                 >
-                  Sign In
+                  Zaloguj się
                 </button>
                 <button
                   onClick={() => setIsSignUpOpen(true)}
                   className="px-4 py-2 bg-[#00aeef] text-white font-semibold rounded-lg hover:bg-opacity-90 transition"
                 >
-                  Sign Up
+                  Zarejestruj się
                 </button>
               </>
             )}
