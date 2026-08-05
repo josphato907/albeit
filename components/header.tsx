@@ -44,8 +44,28 @@ export default function Header() {
     <>
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/alebilet-logo.png" alt="AleBilet" className="h-10 w-auto" />
+          <Link href="/" className="flex items-center">
+            <style>{`
+              .logo-container {
+                cursor: pointer;
+                font-size: 20px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                color: #00aeef;
+              }
+              .logo-container .ticket-emoji {
+                font-size: 24px;
+              }
+              .logo-dot {
+                color: #e54bad;
+              }
+            `}</style>
+            <div className="logo-container">
+              <span className="ticket-emoji">🎟</span>
+              AleBilet<span className="logo-dot">.pl</span>
+            </div>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">
