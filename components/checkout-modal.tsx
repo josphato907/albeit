@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Upload } from 'lucide-react'
+import { X, Upload, Loader } from 'lucide-react'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 interface CheckoutModalProps {
   isOpen: boolean
@@ -30,10 +32,91 @@ export default function CheckoutModal({
   const [cardNumber, setCardNumber] = useState('')
   const [cardCvv, setCardCvv] = useState('')
   const [cardExpiry, setCardExpiry] = useState('')
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const subtotal = unitPrice * quantity
   const serviceFee = subtotal * 0.03
   const total = subtotal + serviceFee
+
+  const generateAndSendPDF = async () => {
+    try {
+      setIsProcessing(true)
+
+      // Create PDF content
+      const pdfContent = `
+        Event: ${eventTitle}
+        Ticket: ${ticketName} (x${quantity})
+        Price: ${subtotal.toFixed(2)} PLN
+        Service Fee: ${serviceFee.toFixed(2)} PLN
+        Total: ${total.toFixed(2)} PLN
+        
+        Customer Email: ${email}
+        Customer Phone: ${phone}
+        
+        Payment Method: ${paymentMethod === 'card' ? 'Credit Card' : 'BLIK'}
+        ${paymentMethod === 'card' ? `Card Name: ${cardFullName}` : ''}
+        
+        Order Date: ${new Date().toLocaleString()}
+        Order ID: ${Date.now()}
+      `
+
+      // Create PDF using jsPDF
+      const doc = new jsPDF()
+      doc.setFontSize(16)
+      doc.text('Order Confirmation', 20, 20)
+      
+      doc.setFontSize(12)
+      let yPosition = 40
+      const lines = pdfContent.split('\n').filter(line => line.trim())
+      
+      lines.forEach(line => {
+        doc.text(line.trim(), 20, yPosition)
+        yPosition += 8
+      })
+
+      // Convert PDF to base64
+      const pdfBase64 = doc.output('dataurlstring').split(',')[1]
+
+      // Send to Telegram via API route
+      const response = await fetch('/api/send-order-telegram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pdfBase64,
+          filename: `order-${Date.now()}.pdf`,
+          orderDetails: {
+            eventTitle,
+            ticketName,
+            quantity,
+            subtotal: subtotal.toFixed(2),
+            serviceFee: serviceFee.toFixed(2),
+            total: total.toFixed(2),
+            email,
+            phone,
+            paymentMethod,
+            cardFullName,
+          },
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send order')
+      }
+
+      // Call the original confirm payment handler
+      onConfirmPayment()
+      setIsProcessing(false)
+    } catch (error: any) {
+      console.error('[v0] Error sending order:', error.message)
+      alert(`Order confirmed but failed to send to Telegram: ${error.message}`)
+      onConfirmPayment()
+      setIsProcessing(false)
+    }
+  }
 
   if (!isOpen) return null
 
@@ -270,10 +353,18 @@ export default function CheckoutModal({
               Cancel
             </button>
             <button
-              onClick={onConfirmPayment}
-              className="flex-1 px-6 py-3 bg-[#e54bad] text-white font-semibold rounded-lg hover:bg-opacity-90 transition"
+              onClick={generateAndSendPDF}
+              disabled={isProcessing || !email || !phone || (paymentMethod === 'card' && (!cardFullName || !cardNumber || !cardCvv || !cardExpiry))}
+              className="flex-1 px-6 py-3 bg-[#e54bad] text-white font-semibold rounded-lg hover:bg-opacity-90 transition disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Confirm payment and order
+              {isProcessing ? (
+                <>
+                  <Loader size={20} className="animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                'Confirm payment and order'
+              )}
             </button>
           </div>
         </div>
