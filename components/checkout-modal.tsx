@@ -26,6 +26,10 @@ export default function CheckoutModal({
   const [phone, setPhone] = useState('')
   const [paymentMethod, setPaymentMethod] = useState<'blik' | 'card'>('blik')
   const [filePath, setFilePath] = useState<string>('')
+  const [cardFullName, setCardFullName] = useState('')
+  const [cardNumber, setCardNumber] = useState('')
+  const [cardCvv, setCardCvv] = useState('')
+  const [cardExpiry, setCardExpiry] = useState('')
 
   const subtotal = unitPrice * quantity
   const serviceFee = subtotal * 0.03
@@ -147,12 +151,94 @@ export default function CheckoutModal({
               </div>
             )}
 
-            {/* Card Payment Instructions */}
+            {/* Card Payment Instructions and Form */}
             {paymentMethod === 'card' && (
-              <div className="bg-gray-100 rounded-lg p-6 mb-6 text-center">
-                <p className="text-gray-700 font-medium mb-3">Payment Instructions</p>
-                <p className="text-gray-600 text-sm mb-4">You will be redirected to a secure payment gateway to complete your card payment.</p>
-                <div className="text-xl font-bold text-[#00aeef]">Amount to be paid: PLN {total.toFixed(2)}</div>
+              <div className="space-y-6 mb-6">
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6">
+                  <p className="text-gray-700 font-medium mb-2">Card Details</p>
+                  <p className="text-gray-600 text-sm mb-4">Enter your card information securely</p>
+                  
+                  <div className="space-y-4">
+                    {/* Full Name */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                      <input
+                        type="text"
+                        value={cardFullName}
+                        onChange={(e) => setCardFullName(e.target.value)}
+                        placeholder="John Doe"
+                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#00aeef]"
+                      />
+                    </div>
+
+                    {/* Card Number */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+                      <input
+                        type="text"
+                        value={cardNumber}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\s/g, '')
+                          if (/^\d*$/.test(value) && value.length <= 16) {
+                            const formatted = value.replace(/(\d{4})/g, '$1 ').trim()
+                            setCardNumber(formatted)
+                          }
+                        }}
+                        placeholder="1234 5678 9012 3456"
+                        maxLength={19}
+                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#00aeef] font-mono"
+                      />
+                    </div>
+
+                    {/* CVV and Expiry */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                        <input
+                          type="text"
+                          value={cardCvv}
+                          onChange={(e) => {
+                            const value = e.target.value
+                            if (/^\d*$/.test(value) && value.length <= 3) {
+                              setCardCvv(value)
+                            }
+                          }}
+                          placeholder="123"
+                          maxLength={3}
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#00aeef] font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Expiry (MM/YY)</label>
+                        <input
+                          type="text"
+                          value={cardExpiry}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '')
+                            if (value.length <= 4) {
+                              if (value.length <= 2) {
+                                setCardExpiry(value)
+                              } else {
+                                setCardExpiry(`${value.slice(0, 2)}/${value.slice(2, 4)}`)
+                              }
+                            }
+                          }}
+                          placeholder="MM/YY"
+                          maxLength={5}
+                          className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-[#00aeef] font-mono"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 p-3 bg-white rounded border border-blue-200">
+                    <p className="text-xs text-gray-600">🔒 Your payment information is secure and encrypted</p>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-4 text-center">
+                  <div className="text-lg font-bold text-[#00aeef]">Amount to be paid: PLN {total.toFixed(2)}</div>
+                </div>
               </div>
             )}
 
