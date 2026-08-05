@@ -119,6 +119,7 @@ export default function EventDetailsPage() {
   const [selectedOffer, setSelectedOffer] = useState<string | null>(null)
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({})
   const [purchaseSuccess, setPurchaseSuccess] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const getTicketOffers = (event: Event): TicketOffer[] => {
     const basePrice = [519, 360, 400, 799, 240, 200][event.id - 1] || 300
@@ -143,8 +144,9 @@ export default function EventDetailsPage() {
   }
 
   useEffect(() => {
-    if (!params.id) {
+    if (!params?.id) {
       console.log("[v0] params.id is missing")
+      setIsLoading(false)
       return
     }
     
@@ -169,7 +171,9 @@ export default function EventDetailsPage() {
       const userData = JSON.parse(storedUser)
       setUser(userData)
     }
-  }, [params.id])
+    
+    setIsLoading(false)
+  }, [params?.id])
 
   const handleQuantityChange = (offerId: string, change: number) => {
     setQuantities((prev) => ({
@@ -202,6 +206,18 @@ export default function EventDetailsPage() {
     // Show success message
     setPurchaseSuccess(true)
     setTimeout(() => setPurchaseSuccess(false), 3000)
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <div className="flex-grow flex items-center justify-center">
+          <p className="text-gray-500">Loading event...</p>
+        </div>
+        <Footer />
+      </>
+    )
   }
 
   if (!event) {
